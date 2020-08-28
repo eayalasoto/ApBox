@@ -70,6 +70,7 @@ namespace Aplicacion.LogicaPrincipal.CargasMasivas.CSV
                             var folio = registros[i][11];
 
                             var facturaEmitida = _db.FacturasEmitidas.FirstOrDefault(fe => fe.EmisorId == sucursalId && fe.Serie == serie && fe.Folio == folio);
+                            var documentoXml = _db.FacturasEmitidasXml.FirstOrDefault(doc => facturaEmitida.Id == doc.IdRfe);
                             if (facturaEmitida == null)
                             {
                                 errores.Add(String.Format("La factura {0} - {1} no fue encontrada para el registro {2}", serie, folio, i));
@@ -117,7 +118,7 @@ namespace Aplicacion.LogicaPrincipal.CargasMasivas.CSV
                                 FacturaEmitidaId = facturaEmitida.Id,
                                 FacturaEmitida = facturaEmitida,
                                 Folio = facturaEmitida.Folio,
-                                IdDocumento = facturaEmitida.Uuid,
+                                IdDocumento = documentoXml.Uuid,
                                 ImportePagado = importePagado,
                                 ImporteSaldoAnterior = importeSaldoAnterior,
                                 ImporteSaldoInsoluto = importeSaldoInsoluto,

@@ -1,6 +1,7 @@
 ﻿using API.Catalogos;
 using API.Operaciones.ComplementosPagos;
 using API.Operaciones.Facturacion;
+using API.Relaciones;
 using Aplicacion.Context;
 using DTOs.Correos;
 using DTOs.Facturacion.Facturacion;
@@ -36,12 +37,13 @@ namespace Aplicacion.LogicaPrincipal.GeneracionComplementosPagos
             {
                 var sucursal = _db.Sucursales.Find(sucursalId);
                 var complementoPago = _db.ComplementosPago.Find(complementoPagoId);
+                var docFacturaEmitida = _db.FacturasEmitidasXml.First(doc => complementoPago.FacturaEmitida.Id == doc.IdRfe);
                 var cliente = _db.Clientes.Find(complementoPago.ReceptorId);
 
                 //Generación del comprobante
                 var facturaDto = _generarDto.GenerarFactura(sucursal, cliente);
                 facturaDto.ComplementoPagoDto = _generarDto.GenerarComplemento(complementoPago);
-                _generarDto.CfdisRelacionados(ref facturaDto, complementoPago);
+                _generarDto.CfdisRelacionados(ref facturaDto, complementoPago, docFacturaEmitida);
 
                 try
                 {
@@ -100,6 +102,7 @@ namespace Aplicacion.LogicaPrincipal.GeneracionComplementosPagos
             try
             {
                 var complementoPago = _db.ComplementosPago.Find(complementoPagoId);
+                var docFacturaEmitida = _db.FacturasEmitidasXml.First(doc => complementoPago.FacturaEmitida.Id == doc.IdRfe);
                 var path = String.Format("C:/Infodextra/Temp/{0} - {1} - {2}.zip", complementoPago.FacturaEmitida.Serie, complementoPago.FacturaEmitida.Folio, DateTime.Now.ToString("yyyyMMddHHmmssfff"));
 
                 if (File.Exists(path))
@@ -107,7 +110,7 @@ namespace Aplicacion.LogicaPrincipal.GeneracionComplementosPagos
                     File.Delete(path);
                 }
 
-                var zip = _facturacionInfodextra.GenerarZip(complementoPago.FacturaEmitida.ArchivoFisicoXml, complementoPago.Sucursal.Logo, null);
+                var zip = _facturacionInfodextra.GenerarZip(docFacturaEmitida.ArchivoFisicoXml, complementoPago.Sucursal.Logo, null);
                 _operacionesStreams.ByteArrayArchivo(zip, path);
                 return path;
             }
@@ -131,13 +134,15 @@ namespace Aplicacion.LogicaPrincipal.GeneracionComplementosPagos
 
                 if (facturaEmitida.PathPdf == null)
                 {
-                    var zip = _facturacionInfodextra.GenerarZip(facturaEmitida.ArchivoFisicoXml, facturaEmitida.Emisor.Logo, null);
+                    var docFacturaEmitida = _db.FacturasEmitidasXml.First(doc => facturaEmitida.Id == doc.IdRfe);
+                    var zip = _facturacionInfodextra.GenerarZip(docFacturaEmitida.ArchivoFisicoXml, facturaEmitida.Emisor.Logo, null);
                     _operacionesStreams.ByteArrayArchivo(zip, pathZip);
                 }
                 else
                 {
                     var pathXml = pathZip.Replace(".zip", ".xml");
-                    _operacionesStreams.ByteArrayArchivo(facturaEmitida.ArchivoFisicoXml, pathXml);
+                    var docFacturaEmitida = _db.FacturasEmitidasXml.First(doc => facturaEmitida.Id == doc.IdRfe);
+                    _operacionesStreams.ByteArrayArchivo(docFacturaEmitida.ArchivoFisicoXml, pathXml);
                     _generarZips.Generar(new List<string>
                     {
                         pathXml,
@@ -219,13 +224,14 @@ namespace Aplicacion.LogicaPrincipal.GeneracionComplementosPagos
         public void Cancelar(int complementoPagoId)
         {
             var complementoPago = _db.ComplementosPago.Find(complementoPagoId);
+            var docFacturaEmitida = _db.FacturasEmitidasXml.First(doc => complementoPago.FacturaEmitida.Id == doc.IdRfe);
             try
-            {
-                _cancelacionInfodextra.CancelarCfdi(DTOs.Enums.Pacs.RealVirtual, complementoPago.Sucursal.Cer, complementoPago.Sucursal.Key, complementoPago.Sucursal.PasswordKey, complementoPago.Sucursal.Rfc, complementoPago.FacturaEmitida.Uuid);
+            {              
+                _cancelacionInfodextra.CancelarCfdi(DTOs.Enums.Pacs.RealVirtual, complementoPago.Sucursal.Cer, complementoPago.Sucursal.Key, complementoPago.Sucursal.PasswordKey, complementoPago.Sucursal.Rfc, docFacturaEmitida.Uuid);
             }
             catch (Exception ex)
             {
-                throw new Exception(String.Format("No se pudo cancelar el recibo con folio fiscal {0} el motivo {1}", complementoPago.FacturaEmitida.Uuid, ex.Message));
+                throw new Exception(String.Format("No se pudo cancelar el recibo con folio fiscal {0} el motivo {1}", docFacturaEmitida.Uuid, ex.Message));
             }
 
             var complementosPagoCancelar = _db.ComplementosPago.Where(cp => cp.FacturaEmitidaId == complementoPago.FacturaEmitida.Id).ToList();
@@ -243,7 +249,8 @@ namespace Aplicacion.LogicaPrincipal.GeneracionComplementosPagos
             try
             {
                 var path = String.Format("C:/Infodextra/Temp/{0}.xml", DateTime.Now.ToString("yyyyMMddHHmmss"));
-                var acuse = _cancelacionInfodextra.ObtenerAcuseCancelacion(DTOs.Enums.Pacs.RealVirtual, complementoPago.FacturaEmitida.Uuid, complementoPago.FacturaEmitida.Emisor.Rfc);
+                var docFacturaEmitida = _db.FacturasEmitidasXml.First(doc => complementoPago.FacturaEmitida.Id == doc.IdRfe);
+                var acuse = _cancelacionInfodextra.ObtenerAcuseCancelacion(DTOs.Enums.Pacs.RealVirtual, docFacturaEmitida.Uuid, complementoPago.FacturaEmitida.Emisor.Rfc);
                 _operacionesStreams.ByteArrayArchivo(acuse, path);
                 return path;
             }
@@ -319,11 +326,19 @@ namespace Aplicacion.LogicaPrincipal.GeneracionComplementosPagos
                 TipoCambio = facturaDto.TipoCambio,
                 TipoComprobante = facturaDto.TipoComprobante,
                 Total = facturaDto.TotalCalculado,
+                //Uuid = facturaDto.Uuid,
+                //ArchivoFisicoXml = facturaDto.Xml
+            };
+
+            var facturaEmitida = new FacturaEmitidaXml
+            {
+                IdRfe = facturaInternaEmitida.Id,
                 Uuid = facturaDto.Uuid,
                 ArchivoFisicoXml = facturaDto.Xml
             };
 
             _db.FacturasEmitidas.Add(facturaInternaEmitida);
+            _db.FacturasEmitidasXml.Add(facturaEmitida);
             _db.SaveChanges();
 
             return facturaInternaEmitida.Id;

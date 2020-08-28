@@ -80,6 +80,12 @@ namespace API.Context
                         .WithMany()
                         .HasForeignKey(s => s.SucursalId)
                         .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<FacturaEmitidaXml>()
+                        .HasRequired(s => s.FacturaEmitida)
+                        .WithMany()
+                        .HasForeignKey(s => s.IdRfe)
+                        .WillCascadeOnDelete(false);
         }
 
         #region Catalogos
@@ -130,8 +136,8 @@ namespace API.Context
         public DbSet<BancoSucursal> BancosSucursales { get; set; }
         public DbSet<ProveedorSucursal> ProveedoresSucursales { get; set; }
         public DbSet<UsuarioSucursal> UsuariosSucursales { get; set; }
+        public DbSet<FacturaEmitidaXml> FacturasEmitidasXml { get; set; }
 
         #endregion
-
     }
 }

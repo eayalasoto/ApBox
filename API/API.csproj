@@ -39,11 +39,9 @@
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Diagnostics.Tracing.EventSource, Version=2.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Diagnostics.Tracing.EventSource.Redist.2.0.1\lib\net461\Microsoft.Diagnostics.Tracing.EventSource.dll</HintPath>
@@ -110,6 +108,7 @@
     <Compile Include="Enums\TiposGastos.cs" />
     <Compile Include="Enums\TiposUsuarios.cs" />
     <Compile Include="Infodextra\OperacionesLinq.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Archivos.cs" />
     <Compile Include="Models\Cargas\CargasCfdisModel.cs" />
     <Compile Include="Models\Cargas\CargasMasivasModel.cs" />
@@ -145,6 +144,7 @@
     </Compile>
     <Compile Include="Relaciones\BancoCliente.cs" />
     <Compile Include="Relaciones\BancoSucursal.cs" />
+    <Compile Include="Relaciones\FacturaEmitidaXml.cs" />
     <Compile Include="Relaciones\ProveedorSucursal.cs" />
     <Compile Include="Relaciones\UsuarioSucursal.cs" />
   </ItemGroup>
