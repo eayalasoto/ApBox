@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Relaciones
 {
-    [Table("REL_BANCOSCLIENTES")]
+    [Table("rel_bancosclientes")]
     public class BancoCliente
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

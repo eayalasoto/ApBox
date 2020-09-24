@@ -6,7 +6,7 @@ using API.Enums;
 
 namespace API.Catalogos
 {
-    [Table("CAT_CENTROSCOSTOS")]
+    [Table("cat_centroscostos")]
     public class CentroCosto
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

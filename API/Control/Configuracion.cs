@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Control
 {
-    [Table("CFG_CONFIGURACIONES")]
+    [Table("cfg_configuraciones")]
     public class Configuracion
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

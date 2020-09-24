@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Operaciones.ComplementosPagos
 {
-    [Table("ORI_TRASLADOS")]
+    [Table("ori_traslados")]
     public class Traslado
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

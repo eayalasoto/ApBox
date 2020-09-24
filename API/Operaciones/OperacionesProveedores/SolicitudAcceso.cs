@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Operaciones.OperacionesProveedores
 {
-    [Table("ORI_SOLICITUDESACCESOS")]
+    [Table("ORI_solicitudesaccesos")]
     public class SolicitudAcceso
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

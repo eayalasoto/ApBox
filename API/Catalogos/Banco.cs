@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Catalogos
 {
-    [Table("CAT_BANCOS")]
+    [Table("cat_bancos")]
     public class Banco
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

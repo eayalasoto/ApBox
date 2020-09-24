@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 namespace API.Catalogos
 {
-    [Table("CAT_DEPARTAMENTOS")]
+    [Table("cat_departamentos")]
     public class Departamento
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

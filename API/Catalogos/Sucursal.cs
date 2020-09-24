@@ -10,7 +10,7 @@ using System.Web;
 
 namespace API.Catalogos
 {
-    [Table("CAT_SUCURSALES")]
+    [Table("cat_sucursales")]
     public class Sucursal
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

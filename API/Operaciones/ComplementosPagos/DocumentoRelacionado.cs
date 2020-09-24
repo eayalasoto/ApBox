@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Operaciones.ComplementosPagos
 {
-    [Table("ORI_DOCUMENTOSRELACIONADOS")]
+    [Table("ori_documentosrelacionados")]
     public class DocumentoRelacionado
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

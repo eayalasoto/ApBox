@@ -1,5 +1,7 @@
-﻿using API.Operaciones.ComplementosPagos;
+﻿using API.Models.Operaciones;
+using API.Operaciones.ComplementosPagos;
 using API.Operaciones.Facturacion;
+using API.Relaciones;
 using Aplicacion.Context;
 using Aplicacion.LogicaPrincipal.Facturas;
 using CFDI.API.CFDI33.CFDI;
@@ -29,7 +31,27 @@ namespace Aplicacion.LogicaPrincipal.ComplementosPagos
             var complementos = _db.ComplementosPago.Where(cp => cp.SucursalId == sucursalId && cp.FechaDocumento >= fechaInicial && cp.FechaDocumento <= fechaFinal).ToList();
             return complementos;
         }
+        //se agregar el filtro de busqueda por facturaEmitidasXml
+        public List<FacturaEmitidaXml> FiltrarFaEmXml(List<ComplementoPago> complementos)
+        {
+         
+            var listafacturaEmitidaXml=new List<FacturaEmitidaXml>();
+            foreach (var facEmi in complementos)
+            {
+                if (facEmi.FacturaEmitidaId!=null)
+                {
+                    var facturaEmitidaXml = _db.FacturasEmitidasXml.FirstOrDefault(doc => doc.IdFe == facEmi.FacturaEmitida.Id);
+                    listafacturaEmitidaXml.Add(facturaEmitidaXml);
+                }
+                else
+                {
+                    listafacturaEmitidaXml.Add(null);
+                }
 
+            }
+            
+            return listafacturaEmitidaXml;
+        }
         public FacturaEmitida Decodificar(String pathXml)
         {
             Comprobante comprobante;

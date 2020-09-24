@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Catalogos
 {
-    [Table("CAT_CLIENTES")]
+    [Table("cat_clientes")]
     public class Cliente
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

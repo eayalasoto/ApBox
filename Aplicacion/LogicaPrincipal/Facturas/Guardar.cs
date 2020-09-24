@@ -43,7 +43,7 @@ namespace Aplicacion.LogicaPrincipal.Facturas
 
             var docFacturaEmitida = new FacturaEmitidaXml
             {
-                IdRfe = facturaEmitida.Id,
+                IdFe = facturaEmitida.Id,
                 Uuid = _decodificar.DecodificarTimbre(comprobante).UUID,
                 ArchivoFisicoXml = xml
             };

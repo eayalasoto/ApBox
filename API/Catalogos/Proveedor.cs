@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace API.Catalogos
 {
-    [Table("CAT_PROVEEDORES")]
+    [Table("cat_proveedores")]
     public class Proveedor
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

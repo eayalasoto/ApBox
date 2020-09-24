@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 namespace API.Catalogos
 {
-    [Table("CAT_PERFILES")]
+    [Table("cat_perfiles")]
     public class Perfil
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

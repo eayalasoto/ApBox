@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Operaciones.Facturacion
 {
-    [Table("ORI_DOCUMENTOSEXTRANJEROS")]
+    [Table("ori_documentosextranjeros")]
     public class DocumentoExtranjero
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

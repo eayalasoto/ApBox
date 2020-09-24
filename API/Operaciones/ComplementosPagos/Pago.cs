@@ -11,7 +11,7 @@ using System.Web;
 
 namespace API.Operaciones.ComplementosPagos
 {
-    [Table("ORI_PAGOS")]
+    [Table("ori_pagos")]
     public class Pago
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

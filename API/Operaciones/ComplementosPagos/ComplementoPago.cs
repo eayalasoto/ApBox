@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Operaciones.ComplementosPagos
 {
-    [Table("ORI_COMPLEMENTOSPAGOS")]
+    [Table("ori_complementospagos")]
     public class ComplementoPago
     {
         [DisplayName("Folio")]

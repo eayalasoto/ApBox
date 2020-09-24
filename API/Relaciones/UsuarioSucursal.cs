@@ -5,7 +5,7 @@ using API.Catalogos;
 
 namespace API.Relaciones
 {
-    [Table("REL_USUARIOSSUCURSALES")]
+    [Table("rel_usuariossucursales")]
     public class UsuarioSucursal
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

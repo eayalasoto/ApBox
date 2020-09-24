@@ -114,7 +114,7 @@ namespace InventorAid.Controllers.Ajax
 
             foreach (var cfdi in cfdis)
             {
-                var docFacturaEmitida = _db.FacturasEmitidasXml.First(doc => cfdi.FacturaEmitida.Id == doc.IdRfe);
+                var docFacturaEmitida = _db.FacturasEmitidasXml.First(doc => cfdi.FacturaEmitida.Id == doc.IdFe);
                 docFacturaEmitida.ArchivoFisicoXml = null;
 
                 cfdi.FacturaEmitida.Emisor.Bancos.Clear();

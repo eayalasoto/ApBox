@@ -21,6 +21,7 @@ namespace API.Context
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            
             modelBuilder.Entity<UsuarioSucursal>()
                         .HasRequired(s => s.Usuario)
                         .WithMany()
@@ -84,7 +85,7 @@ namespace API.Context
             modelBuilder.Entity<FacturaEmitidaXml>()
                         .HasRequired(s => s.FacturaEmitida)
                         .WithMany()
-                        .HasForeignKey(s => s.IdRfe)
+                        .HasForeignKey(s => s.IdFe)
                         .WillCascadeOnDelete(false);
         }
 

@@ -1,12 +1,14 @@
 ﻿using API.Catalogos;
 using API.Models.Facturas;
+using API.Relaciones;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Operaciones.Facturacion
 {
-    [Table("ORI_FACTURASEMITIDAS")]
+    [Table("ori_facturasemitidas")]
     public class FacturaEmitida : Factura
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -22,7 +24,7 @@ namespace API.Operaciones.Facturacion
         [Required(ErrorMessage = "Campo Obligatorio")]
         public int ReceptorId { get; set; }
         [ForeignKey("ReceptorId")]
-        public virtual Cliente Receptor { get; set; }        
+        public virtual Cliente Receptor { get; set; }
 
     }
 }

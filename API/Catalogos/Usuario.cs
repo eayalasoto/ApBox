@@ -8,7 +8,7 @@ using API.Relaciones;
 
 namespace API.Catalogos
 {
-    [Table("CAT_USUARIOS")]
+    [Table("cat_usuarios")]
     public class Usuario
     {
         //Kardex

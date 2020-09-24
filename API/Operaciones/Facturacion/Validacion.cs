@@ -5,7 +5,7 @@ using System.Text;
 
 namespace API.Operaciones.Facturacion
 {
-    [Table("FAC_VALIDACIONES")]
+    [Table("fac_validaciones")]
     public class Validacion : ValidacionDto
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

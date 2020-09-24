@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Operaciones.OperacionesProveedores
 {
-    [Table("ORI_PAGOSPROVEEDORES")]
+    [Table("ori_pagosproveedores")]
     public class PagoProveedor
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
