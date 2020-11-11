@@ -54,7 +54,6 @@ namespace APBox.Controllers.RecepcionDocumentos
                         }
                         catch (Exception)
                         {
-                            
                         }
 
                     }

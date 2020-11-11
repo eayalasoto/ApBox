@@ -11,7 +11,6 @@ using API.Enums;
 using APBox.Context;
 using APBox.Models;
 
-
 namespace APBox.Controllers
 {
     [Authorize]
@@ -27,14 +26,13 @@ namespace APBox.Controllers
         public AccountController()
             : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
         {
-
         }
 
         public AccountController(UserManager<ApplicationUser> userManager)
         {
             UserManager = userManager;
         }
-       
+
         public UserManager<ApplicationUser> UserManager { get; private set; }
 
         //

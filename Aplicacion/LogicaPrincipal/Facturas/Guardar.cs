@@ -1,6 +1,5 @@
 ﻿using API.Catalogos;
 using API.Operaciones.Facturacion;
-using API.Relaciones;
 using Aplicacion.Context;
 using CFDI.API.CFDI33.CFDI;
 using System;
@@ -33,19 +32,12 @@ namespace Aplicacion.LogicaPrincipal.Facturas
                 TipoCambio = Convert.ToDouble(comprobante.TipoCambio),
                 TipoComprobante = comprobante.TipoDeComprobante,
                 Total = Convert.ToDouble(comprobante.Total),
-                //Uuid = _decodificar.DecodificarTimbre(comprobante).UUID,
+                Uuid = _decodificar.DecodificarTimbre(comprobante).UUID,
                 Version = comprobante.Version,
-                //ArchivoFisicoXml = xml,
+                ArchivoFisicoXml = xml,
 
                 //TODO: Arreglar esta fecha decodificando el TFD
                 FechaTimbrado = DateTime.Now
-            };
-
-            var docFacturaEmitida = new FacturaEmitidaXml
-            {
-                IdFe = facturaEmitida.Id,
-                Uuid = _decodificar.DecodificarTimbre(comprobante).UUID,
-                ArchivoFisicoXml = xml
             };
 
             if(comprobante.Impuestos != null)
@@ -86,7 +78,6 @@ namespace Aplicacion.LogicaPrincipal.Facturas
             facturaEmitida.Receptor = null;
 
             _db.FacturasEmitidas.Add(facturaEmitida);
-            _db.FacturasEmitidasXml.Add(docFacturaEmitida);
             _db.SaveChanges();
 
             return facturaEmitida;

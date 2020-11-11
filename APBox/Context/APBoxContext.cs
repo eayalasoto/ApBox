@@ -1,5 +1,5 @@
 ﻿using API.Context;
-using MySql.Data.Entity;
+using MySql.Data.EntityFramework;
 using System.Data.Entity;
 
 namespace APBox.Context

@@ -4,7 +4,6 @@ using Aplicacion.LogicaPrincipal.CargasMasivas.CSV;
 using CFDI.API.Enums.CFDI33;
 using CFDI.API.Enums.Complementos.Pagos10;
 using System;
-using System.Linq;
 using System.Web.Mvc;
 
 namespace APBox.Controllers.Ajax
@@ -56,7 +55,6 @@ namespace APBox.Controllers.Ajax
         public PartialViewResult AgregarFacturaComplementoPago(int pagoId, int facturaEmitidaId, int numeroParcialidad, string moneda, double tipoCambio, double importeSaldoAnterior, double importePagado, double importeSaldoInsoluto)
         {
             var facturaEmitida = _db.FacturasEmitidas.Find(facturaEmitidaId);
-            var docFacturaEmitida = _db.FacturasEmitidasXml.Find(facturaEmitidaId);
 
             var documentoRelacionado = new DocumentoRelacionado
             {
@@ -70,7 +68,7 @@ namespace APBox.Controllers.Ajax
                 TipoCambio = tipoCambio,
                 PagoId = pagoId,
 
-                IdDocumento = docFacturaEmitida.Uuid,
+                IdDocumento = facturaEmitida.Uuid,
                 Folio = facturaEmitida.Folio.ToString(),
                 MetodoPago = c_MetodoPago.PPD,
                 Serie = facturaEmitida.Serie

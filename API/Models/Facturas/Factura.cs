@@ -69,16 +69,15 @@ namespace API.Models.Facturas
         public String SelloSat { get; set; }
 
         public String Certificado { get; set; }
-        //[NotMapped]
-        //[DisplayName("Folio Fiscal")]
-        //public String Uuid { get; set; }
+
+        [DisplayName("Folio Fiscal")]
+        public String Uuid { get; set; }
 
         #region Archivos
-       public String NombreArchivoXml { get; set; }
+        public String NombreArchivoXml { get; set; }
 
-        //[NotMapped]
-       // [DisplayName("Archivo")]
-        //public byte[] ArchivoFisicoXml { get; set; }
+        [DisplayName("Archivo")]
+        public byte[] ArchivoFisicoXml { get; set; }
 
         [DisplayName("Path PDF")]
         public String PathPdf { get; set; }

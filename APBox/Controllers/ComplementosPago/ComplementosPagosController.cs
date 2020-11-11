@@ -18,8 +18,6 @@ using System.Collections.Generic;
 using API.Models.ComplementosPagos;
 using System.Linq;
 using CFDI.API.Enums.CFDI33;
-using API.Models.Facturas;
-using API.Relaciones;
 
 namespace APBox.Controllers.ComplementosPago
 {
@@ -40,50 +38,35 @@ namespace APBox.Controllers.ComplementosPago
         // GET: Facturas
         public ActionResult Index()
         {
-            
-            var facturaEmitidaXmlModel = new FacturaEmitidaXmlModel();
             var complementosPagosModel = new ComplementosPagosModel
             {
                 Mes = (Meses)(DateTime.Now.Month),
                 Anio = DateTime.Now.Year
             };
 
-            var fechaInicial = new DateTime(/*2020,8*/DateTime.Now.Year, DateTime.Now.Month, 1, 0, 0, 0);
+            var fechaInicial = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, 0, 0, 0);
             var fechaFinal = DateTime.Now;
-            //se pasan dos modelos al view 
-            var formViewModel = new FormViewModel();
 
-            var filtroFacturas = _logicaFacadeFacturas.Filtrar(fechaInicial, fechaFinal, ObtenerSucursal());
-            complementosPagosModel.ComplementosPago = filtroFacturas;
-            facturaEmitidaXmlModel.FacEmXml = _logicaFacadeFacturas.FiltrarFaEmXml(filtroFacturas);
-            formViewModel.complementoPago = complementosPagosModel;
-            formViewModel.facturaEmitidaXml = facturaEmitidaXmlModel;
-            return View(formViewModel);
+            complementosPagosModel.ComplementosPago = _logicaFacadeFacturas.Filtrar(fechaInicial, fechaFinal, ObtenerSucursal());
+            return View(complementosPagosModel);
         }
 
         [HttpPost]
-        public ActionResult Index(FormViewModel complementosPagosModel, string actionName)
+        public ActionResult Index(ComplementosPagosModel complementosPagosModel, string actionName)
         {
-            //se pasan dos modelos al view 
-            var formViewModel = new FormViewModel();
             if (actionName == "Filtrar")
             {
-                var facturaEmitidaXmlModel = new FacturaEmitidaXmlModel();
-                var dia = DateTime.DaysInMonth(complementosPagosModel.complementoPago.Anio, (int)complementosPagosModel.complementoPago.Mes);
+                var dia = DateTime.DaysInMonth(complementosPagosModel.Anio, (int)complementosPagosModel.Mes);
 
-                var fechaInicial = new DateTime(complementosPagosModel.complementoPago.Anio, (int)complementosPagosModel.complementoPago.Mes, 1, 0, 0, 0);
-                var fechaFinal = new DateTime(complementosPagosModel.complementoPago.Anio, (int)complementosPagosModel.complementoPago.Mes, dia, 23, 59, 59);
-               
-                var filtroFacturas= _logicaFacadeFacturas.Filtrar(fechaInicial, fechaFinal, ObtenerSucursal());
-                complementosPagosModel.complementoPago.ComplementosPago = filtroFacturas;
-                facturaEmitidaXmlModel.FacEmXml = _logicaFacadeFacturas.FiltrarFaEmXml(filtroFacturas);
-                formViewModel.complementoPago = complementosPagosModel.complementoPago;
-                formViewModel.facturaEmitidaXml = facturaEmitidaXmlModel;
+                var fechaInicial = new DateTime(complementosPagosModel.Anio, (int)complementosPagosModel.Mes, 1, 0, 0, 0);
+                var fechaFinal = new DateTime(complementosPagosModel.Anio, (int)complementosPagosModel.Mes, dia, 23, 59, 59);
+
+                complementosPagosModel.ComplementosPago = _logicaFacadeFacturas.Filtrar(fechaInicial, fechaFinal, ObtenerSucursal());
             }
             else if (actionName == "Timbrar")
             {
                 var errores = new List<String>();
-                foreach (var complementoPago in complementosPagosModel.complementoPago.ComplementosPago.Where(cp => cp.Seleccionado))
+                foreach (var complementoPago in complementosPagosModel.ComplementosPago.Where(cp => cp.Seleccionado))
                 {
                     try
                     {
@@ -109,7 +92,7 @@ namespace APBox.Controllers.ComplementosPago
                 }
             }
 
-            return View(formViewModel);
+            return View(complementosPagosModel);
         }
 
         // GET: ComplementosPago/Create
@@ -398,13 +381,8 @@ namespace APBox.Controllers.ComplementosPago
             if (ModelState.IsValid)
             {
                 _acondicionarComplementosPagos.DocumentosRelacionados(complementoPago);
-                //se actualiza el campo FacturaEmitidaId del complementoPago 
-                var complementoPagoId = _db.ComplementosPago.Find(complementoPago.Id);
-                complementoPagoId.FacturaEmitidaId = complementoPago.FacturaEmitidaId;
-                
-                _db.Entry(complementoPagoId).State = EntityState.Modified;
-                _db.SaveChanges();
-                if (complementoPago.DocumentosRelacionados != null)
+
+                if(complementoPago.DocumentosRelacionados != null)
                 {
                     foreach (var pago in complementoPago.DocumentosRelacionados)
                     {

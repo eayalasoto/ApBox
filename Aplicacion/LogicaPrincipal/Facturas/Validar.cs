@@ -25,7 +25,7 @@ namespace Aplicacion.LogicaPrincipal.Facturas
             var fecha = Convert.ToDateTime(comprobante.Fecha);
             var fechaTimbrado = Convert.ToDateTime(timbreFiscalDigital.FechaTimbrado);
 
-            var uuidRepetido = _db.FacturasEmitidasXml.FirstOrDefault(f => f.Uuid == timbreFiscalDigital.UUID);
+            var uuidRepetido = _db.FacturasEmitidas.FirstOrDefault(f => f.Uuid == timbreFiscalDigital.UUID);
             if (uuidRepetido != null)
             {
                 throw new Exception(String.Format("El folio fiscal {0} ya fue cargado al sistema", timbreFiscalDigital.UUID));

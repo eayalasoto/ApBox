@@ -39,9 +39,6 @@ namespace API.Operaciones.Facturacion
         [ForeignKey("ValidacionId")]
         public virtual Validacion Validacion { get; set; }
 
-        [DisplayName("Folio Fiscal")]
-        public String Uuid { get; set; }
-
         #region Autoriazacion
 
         public bool? Autorizada { get; set; }
@@ -58,9 +55,6 @@ namespace API.Operaciones.Facturacion
         public String NotasAutorizacion { get; set; }
 
         #endregion
-        #region Archivos
-        [DisplayName("Archivo")]
-        public byte[] ArchivoFisicoXml { get; set; }
-        #endregion
+
     }
 }

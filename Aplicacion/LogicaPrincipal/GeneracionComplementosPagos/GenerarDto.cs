@@ -1,7 +1,6 @@
 ﻿using API.Catalogos;
 using API.DTOs.Pagos;
 using API.Operaciones.ComplementosPagos;
-using API.Relaciones;
 using CFDI.API.Enums.CFDI33;
 using DTOs.Correos;
 using DTOs.Facturacion.Facturacion;
@@ -181,13 +180,12 @@ namespace Aplicacion.LogicaPrincipal.GeneracionComplementosPagos
 
         #region CFDIs Relacionados
 
-        public void CfdisRelacionados(ref FacturaDto facturaDto, ComplementoPago complementoPago, FacturaEmitidaXml facturaEmitidaXml)
+        public void CfdisRelacionados(ref FacturaDto facturaDto, ComplementoPago complementoPago)
         {
-
             if(complementoPago.CfdiRelacionadoId != null && complementoPago.TipoRelacion != null)
             {
                 facturaDto.TipoRelacion = complementoPago.TipoRelacion;
-                facturaDto.CfdisRelacionados = new List<string> { facturaEmitidaXml.Uuid };
+                facturaDto.CfdisRelacionados = new List<string> { complementoPago.CfdiRelacionado.Uuid };
             }
         }
 
