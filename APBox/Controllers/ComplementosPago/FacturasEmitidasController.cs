@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -10,6 +11,7 @@ using API.Models.Facturas;
 using API.Operaciones.Facturacion;
 using Aplicacion.LogicaPrincipal.Facturas;
 using Aplicacion.LogicaPrincipal.GeneracionComplementosPagos;
+using MySql.Data.MySqlClient;
 
 namespace APBox.Controllers.Catalogos
 {
@@ -36,7 +38,7 @@ namespace APBox.Controllers.Catalogos
                 FechaFinal = DateTime.Now,
                 SucursalId = ObtenerSucursal(),
             };
-            
+
             _operacionesCfdisEmitidos.ObtenerFacturas(ref facturasEmitidasModel);
             return View(facturasEmitidasModel);
         }
@@ -247,6 +249,98 @@ namespace APBox.Controllers.Catalogos
         }
 
         #endregion
+
+        public ActionResult detallePago() {
+            var sucursalId = ObtenerSucursal();
+
+            var facturasEmitidasModel = new FacturasEmitidasModel
+            {
+                FechaInicial = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
+                FechaFinal = DateTime.Now,
+                SucursalId = ObtenerSucursal(),
+            };
+            
+            List<search_doc_rel_fac_emi> listaComplementosPagos = new List<search_doc_rel_fac_emi>();
+            _operacionesCfdisEmitidos.ObtenerFacturas(ref facturasEmitidasModel);
+            bool isEmpty = facturasEmitidasModel.FacturasEmitidas.Any();
+            if (isEmpty)
+            {
+                foreach (var facturasEmitidas in facturasEmitidasModel.FacturasEmitidas)
+                {
+                    search_doc_rel_fac_emi queryFacturas = queryFacturasPagadas(facturasEmitidas.Id);
+                    if (queryFacturas != null && queryFacturas.FacturaEmitidaId != 0)
+                    {
+                        facturasEmitidas.FolioComplementoPago = queryFacturas.Folio;
+                        facturasEmitidas.SerieComplementoPago = queryFacturas.Serie;
+                        facturasEmitidas.FacturaComplementoPagoId = queryFacturas.Id;
+                        facturasEmitidas.FacturaEmitidaPagada = true;
+                    }
+                    
+                }
+                
+            }
+            return View(facturasEmitidasModel);
+        }
+
+        [HttpPost]
+        public ActionResult detallePago(FacturasEmitidasModel facturasEmitidasModel)
+        {
+            bool isEmpty;
+            if (!ModelState.IsValid)
+            {
+                _operacionesCfdisEmitidos.ObtenerFacturasById(ref facturasEmitidasModel);
+            }
+            else
+            {
+                _operacionesCfdisEmitidos.ObtenerFacturas(ref facturasEmitidasModel);
+            }
+                    isEmpty = facturasEmitidasModel.FacturasEmitidas.Any();
+                    if (isEmpty)
+                    {
+                        foreach (var facturasEmitidas in facturasEmitidasModel.FacturasEmitidas)
+                        {
+                            search_doc_rel_fac_emi queryFacturas = queryFacturasPagadas(facturasEmitidas.Id);
+                            if (queryFacturas != null && queryFacturas.FacturaEmitidaId != 0)
+                            {
+                                facturasEmitidas.FolioComplementoPago = queryFacturas.Folio;
+                                facturasEmitidas.SerieComplementoPago = queryFacturas.Serie;
+                                facturasEmitidas.FacturaComplementoPagoId = queryFacturas.Id;
+                                facturasEmitidas.FacturaEmitidaPagada = true;
+                            }
+                        }
+                    }
+           
+            return View(facturasEmitidasModel);
+        }
+
+        public search_doc_rel_fac_emi queryFacturasPagadas(int id)
+        {
+            var listRelTblSearch = new search_doc_rel_fac_emi();
+            const string query = @"select IFNULL(cp.FacturaEmitidaId,0) as FacturaEmitidaId, fe.Folio,fe.Serie,cp.Id from ori_documentosrelacionados dr " +
+                        "join ori_pagos p on(dr.PagoId = p.Id) " +
+                        "join ori_complementospagos cp on(p.ComplementoPagoId = cp.Id) " +
+                        "join ori_facturasemitidas fe on (cp.FacturaEmitidaId = fe.Id) " +
+                        "where dr.FacturaEmitidaId in (@Id); ";
+
+            var resultados = _db.Database.SqlQuery<search_doc_rel_fac_emi>(query,
+                    new MySqlParameter { ParameterName = "@Id", MySqlDbType = MySqlDbType.String, Value = id }).FirstOrDefault();
+            
+            return resultados;
+        }
+
+
+        public class search_doc_rel_fac_emi
+        {
+            public int FacturaEmitidaId { get; set; }
+
+            public string Folio { get; set; }
+
+            public string Serie { get; set; }
+
+            public int Id { get; set; }
+
+        }
+    
 
     }
 }

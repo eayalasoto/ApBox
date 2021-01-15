@@ -11,13 +11,52 @@ using Utilerias.LogicaPrincipal;
 
 namespace BusApBox
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public void ProcesarArchivoExterno()
         {
-            Console.WriteLine("***************Inicio Cola***************");
+            //Console.WriteLine("***************Inicio Cola***************");
+            LogicaFacadeFacturas _logicaFacade;
+            AplicacionContext _db = new AplicacionContext();
+            ManejoArchivos _manejoArchivos = new ManejoArchivos();
+            OperacionesStreams _operacionesStreams = new OperacionesStreams();
+            SolicitudArchivosXsa _solicitudArchivosXsa = new SolicitudArchivosXsa();
+            ObtenerConfiguraciones _obtenerConfiguraciones = new ObtenerConfiguraciones();
+            //var pathArchivosSftp = Properties.Settings.Default.PathSftp;
+            var pathArchivosExternos = Properties.Settings.Default.PathArchivos;
+            var archivos = new List<String>();
+            var obtenerArchivos = new ObtenerArchivosLocales(pathArchivosExternos);
+                archivos = obtenerArchivos.ObtenerArchivos();
 
-            var pathArchivosSftp = Properties.Settings.Default.PathSftp;
+                foreach (var archivo in archivos.Where(a => a.Contains(".xml") || a.Contains(".XML")))
+                {
+                    Console.WriteLine("**************Procesando archivos**************");
+                    Console.WriteLine("{0}", archivo);
+                        
+                    try
+                    {
+                        _logicaFacade = new LogicaFacadeFacturas();
+
+                        Console.WriteLine("Inicio: {0}", DateTime.Now);
+                        _logicaFacade.Decodificar(archivo);
+                        Console.WriteLine("Fin: {0}", DateTime.Now);
+                    }
+                    catch (Exception ex)
+                    {
+                    Console.WriteLine("Error: {0}", ex.Message);
+                        _manejoArchivos.MoverErroneo(archivo);
+                    }
+                    Console.WriteLine("**************Finalizando Proceso de Archivos**************");
+                    Console.WriteLine("");
+                }
+
+
+        }
+        public static void Main(string[] args)
+        {
+          //  Console.WriteLine("***************Inicio Cola***************");
+
+           /* var pathArchivosSftp = Properties.Settings.Default.PathSftp;
             var pathArchivosExternos = Properties.Settings.Default.PathArchivos;
 
             while (true)
@@ -55,9 +94,9 @@ namespace BusApBox
                 catch (Exception)
                 {
                     Console.WriteLine("Ocurrio un error al mover los archivos de {0} a {1}", pathArchivosExternos, pathArchivosSftp);
-                }
+                }*/
 
-                var obtenerArchivos = new ObtenerArchivosLocales(pathArchivosSftp);
+             /*   var obtenerArchivos = new ObtenerArchivosLocales(pathArchivosSftp);
                 archivos = obtenerArchivos.ObtenerArchivos();
 
                 foreach (var archivo in archivos.Where(a => a.Contains(".xml") || a.Contains(".XML")))
@@ -80,9 +119,9 @@ namespace BusApBox
                     }
                     Console.WriteLine("**************Finalizando Proceso de Archivos**************");
                     Console.WriteLine("");
-                }
+                }*/
 
-                foreach (var sucursal in sucursales)
+              /*  foreach (var sucursal in sucursales)
                 {
                     //Solicitud de Archivos de XSA
                     if (sucursal.Servidor != null)
@@ -116,7 +155,7 @@ namespace BusApBox
                         }
                     }
                 }
-            }
+            }*/
         }
     }
 }

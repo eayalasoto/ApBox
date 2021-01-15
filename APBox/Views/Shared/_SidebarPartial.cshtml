@@ -110,11 +110,11 @@
                                     </li>
                                 }
                                 @*@if (User.IsInRole("BANCOS"))
-                                    {
-                                    <li>
-                                        @Html.ActionLink("Bancos", "Index", "Bancos")
-                                    </li>
-                                    }*@
+                            {
+                            <li>
+                                @Html.ActionLink("Bancos", "Index", "Bancos")
+                            </li>
+                            }*@
                             </ul>
                         </div>
                     </li>
@@ -245,10 +245,18 @@
                             <li>
                                 @Html.ActionLink("Cargar CFDi Externos", "CargarDocumentosExternos", "RecepcionDocumentos")
                             </li>
-
+                            <li>
+                                @Html.ActionLink("Reporte Facturas con Pago", "detallePago", "FacturasEmitidas")
+                            </li>
                         </ul>
                     </div>
                 </li>
+                @*<li>
+                    <a href="/FacturasEmitidas/detallePago" title="ComplementoPagos">
+                        <i class="glyph-icon icon-linecons-money"></i>
+                        <span>Reporte Facturas con Pago</span>
+                    </a>
+                </li>*@
                 <li class="header"><span>Reportes</span></li>
 
                 <li>
@@ -259,7 +267,7 @@
                     <div class="sidebar-submenu">
                         <ul>
                             <li>
-                                @Html.ActionLink("Estadísiticas por Proveedor", "EstadisticasProveedor", "Reportes")
+                                @Html.ActionLink("Estadísticas por Proveedor", "EstadisticasProveedor", "Reportes")
                             </li>
                             <li>
                                 @Html.ActionLink("Estadísticas por Cliente", "EstadisticasCliente", "Reportes")

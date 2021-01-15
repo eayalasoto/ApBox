@@ -427,8 +427,14 @@ namespace APBox.Controllers.ComplementosPago
                     var sucursalId = ObtenerSucursal();
 
                     //Actualizacion Receptor
+
+                    DateTime fechaDoc = complementoPago.FechaDocumento;
+                    var horaHoy = DateTime.Now;
+                    var fechaTime = new DateTime(fechaDoc.Year, fechaDoc.Month, fechaDoc.Day, horaHoy.Hour, horaHoy.Minute, horaHoy.Second);
+     
                     var complementoPagoDb = _db.ComplementosPago.Find(complementoPago.Id);
                     complementoPagoDb.ReceptorId = complementoPago.ReceptorId;
+                    complementoPagoDb.FechaDocumento = fechaTime;
                     _db.Entry(complementoPagoDb).State = EntityState.Modified;
                     _db.SaveChanges();
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BusApBox;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
@@ -7,6 +8,7 @@ namespace APBox.Controllers.RecepcionDocumentos
 {
     public class RecepcionDocumentosController : Controller
     {
+        
         // GET: RecepcionDocumentos
         public ActionResult CargarDocumentosExternos()
         {
@@ -16,10 +18,17 @@ namespace APBox.Controllers.RecepcionDocumentos
         [HttpPost, ActionName("CargarDocumentosExternos")]
         public ActionResult CargarDocumentosExternosPost()
         {
+
+            Program bus = new Program();
             if (ModelState.IsValid)
             {
+
                 var archivos = SubeArchivos();
+                if (archivos.Count > 0) {
+                    bus.ProcesarArchivoExterno();
+                
                 ModelState.AddModelError("", "Comando realizado con éxito");
+                }
             }
 
             return View();

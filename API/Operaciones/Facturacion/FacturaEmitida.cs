@@ -22,7 +22,16 @@ namespace API.Operaciones.Facturacion
         [Required(ErrorMessage = "Campo Obligatorio")]
         public int ReceptorId { get; set; }
         [ForeignKey("ReceptorId")]
-        public virtual Cliente Receptor { get; set; }        
+        public virtual Cliente Receptor { get; set; }
+        [NotMapped]
+        public string FolioComplementoPago { get; set; }
+        [NotMapped]
+        public string SerieComplementoPago { get; set; }
 
+        [NotMapped]
+        public bool FacturaEmitidaPagada { get; set; }
+
+        [NotMapped]
+        public int FacturaComplementoPagoId { get; set;}
     }
 }
